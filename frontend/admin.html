@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel</title>
+
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+
+  <!-- ===== Navbar (component) ===== -->
+  <div id="navbar"></div>
+
+  <!-- 🔥 Page Content -->
+  <main class="page-content">
+
+    <div class="container">
+
+      <h1>🛠 Admin Panel</h1>
+
+      <!-- 🔐 Login -->
+      <div id="login-box" class="card">
+        <h2>เข้าสู่ระบบ</h2>
+        <p class="warning">*เฉพาะผู้ดูแลระบบเท่านั้น</p>
+
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+
+        <button class="primary" onclick="login()">Login</button>
+      </div>
+
+      <!-- 🔒 Admin Panel -->
+      <div id="admin-panel" class="card" style="display:none">
+
+        <div class="top-bar">
+          <span>👤 ผู้ดูแลระบบ</span>
+          <button class="danger" onclick="logout()">Logout</button>
+        </div>
+
+        <!-- ===== Tabs ===== -->
+        <div class="admin-tabs">
+          <button class="tab-btn active" onclick="showTab('laws')">📚 จัดการกฎหมาย</button>
+          <button class="tab-btn" onclick="showTab('cards')">🎴 จัดการการ์ด</button>
+        </div>
+
+        <!-- ===== Tab: กฎหมาย ===== -->
+        <div id="tab-laws" class="tab-content active">
+          <h2>จัดการข้อมูลกฎหมาย</h2>
+
+          <label>หมวดกฎหมาย</label>
+          <select id="category" onchange="loadAdminLaws()">
+            <option value="computer">กฎหมายคอมพิวเตอร์</option>
+            <option value="privacy">กฎหมายคุ้มครองข้อมูลส่วนบุคคล</option>
+            <option value="copyright">กฎหมายลิขสิทธิ์</option>
+          </select>
+
+          <input id="section" placeholder="มาตรา">
+          <input id="title" placeholder="หัวข้อ">
+          <textarea id="description" placeholder="รายละเอียด"></textarea>
+
+          <!-- ซ่อน / แสดงโทษได้ตามหมวด -->
+          <div id="penalty-box">
+            <input id="penalty" placeholder="โทษ">
+          </div>
+
+          <button id="saveBtn" class="primary" onclick="saveLaw()">เพิ่มข้อมูล</button>
+
+          <hr>
+
+          <div id="admin-laws"></div>
+        </div>
+
+        <!-- ===== Tab: การ์ด ===== -->
+        <div id="tab-cards" class="tab-content">
+          <h2>🎴 จัดการการ์ด</h2>
+          <p class="hint">* ช่องที่ไม่มีข้อมูลสามารถเว้นว่างได้ ยกเว้นหัวข้อ</p>
+
+          <div class="form-group">
+            <label>หัวข้อ (บังคับ) <span class="required">*</span></label>
+            <input id="card-title" placeholder="เช่น ศูนย์รับปรึกษากฎหมาย">
+          </div>
+
+          <div class="form-group">
+            <label>หัวข้อย่อย</label>
+            <input id="card-subtitle" placeholder="เช่น บริการฟรี 24 ชั่วโมง">
+          </div>
+
+          <div class="form-group">
+            <label>รายละเอียด</label>
+            <textarea id="card-description" placeholder="คำอธิบายสั้นๆ เกี่ยวกับการ์ด"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>URL รูปภาพ</label>
+            <input id="card-imageUrl" placeholder="https://example.com/image.jpg">
+            <div id="image-preview" class="image-preview"></div>
+          </div>
+
+          <div class="form-group">
+            <label>Slug (สำหรับ URL)</label>
+            <input id="card-slug" placeholder="เช่น consult-center">
+            <p class="hint">ใช้สำหรับสร้าง URL เช่น card-detail.html?slug=consult-center</p>
+          </div>
+
+          <div class="form-group">
+            <label>หมวดหมู่</label>
+            <select id="card-category">
+              <option value="">-- ไม่ระบุ --</option>
+              <option value="help">ศูนย์ช่วยเหลือ</option>
+              <option value="article">บทความ</option>
+              <option value="resource">แหล่งข้อมูล</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>เนื้อหาหน้า (HTML)</label>
+            <textarea id="card-pageContent" placeholder="เนื้อหาที่จะแสดงเมื่อคลิกการ์ด (รองรับ HTML)"
+              rows="8"></textarea>
+            <p class="hint">ใส่ HTML ได้เลย เช่น &lt;h2&gt;หัวข้อ&lt;/h2&gt;&lt;p&gt;รายละเอียด&lt;/p&gt;</p>
+          </div>
+
+          <div class="form-actions">
+            <button id="saveCardBtn" class="primary" onclick="saveCard()">➕ เพิ่มการ์ด</button>
+            <button id="cancelCardBtn" class="secondary" onclick="resetCardForm()" style="display:none">ยกเลิก</button>
+          </div>
+
+          <hr>
+
+          <h3>รายการการ์ดทั้งหมด</h3>
+          <div id="admin-cards" class="cards-list"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- โหลด Navbar -->
+  <script>
+    fetch("components/navbar.html")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("navbar").innerHTML = html;
+      });
+  </script>
+
+  <script src="js/config.js"></script>
+  <script src="js/admin.js"></script>
+
+</body>
+
+</html>

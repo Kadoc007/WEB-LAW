@@ -1,0 +1,60 @@
+/* ===== LINE Floating Button ===== */
+.line-float {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  background: #06c755;
+  color: white;
+  text-decoration: none;
+  padding: 10px 14px;
+  border-radius: 50px;
+
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+}
+
+/* 🔒 ล็อกขนาดข้อความ */
+.line-float span {
+  font-size: 14px !important;
+  line-height: 1.2 !important;
+  font-weight: bold;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* icon */
+.line-float img {
+  width: 36px;
+  height: 36px;
+}
+/* 📱 Mobile */
+@media (max-width: 768px) {
+  .line-float span {
+    display: none;
+    /* มือถือโชว์เฉพาะ icon */
+  }
+
+  .line-float {
+    padding: 10px;
+    border-radius: 50%;
+  }
+}
+/* ===== LINE Wiggle Animation ===== */
+@keyframes lineWiggle {
+  0%   { transform: translateX(0); }
+  15%  { transform: translateX(-4px); }
+  30%  { transform: translateX(4px); }
+  45%  { transform: translateX(-3px); }
+  60%  { transform: translateX(3px); }
+  75%  { transform: translateX(-2px); }
+  100% { transform: translateX(0); }
+}
+
+/* ตอนถูกกระตุ้น */
+.line-float.wiggle {
+  animation: lineWiggle 0.8s ease-in-out;
+}

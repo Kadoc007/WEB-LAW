@@ -1,0 +1,114 @@
+/* ===== Page Layout ===== */
+.page-content {
+  padding-top: 64px;
+  background: #f1f5f9;
+  font-family: "TH Sarabun New", "Segoe UI", sans-serif;
+}
+
+.header {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.header h1 {
+  font-size: 42px;
+  color: #1e293b;
+  margin-bottom: 10px;
+}
+
+.header p {
+  font-size: 22px;
+  color: #555;
+}
+
+/* ===== List ===== */
+.consult-list {
+  max-width: 1000px;
+  margin: 0 auto 80px;
+  padding: 0 20px;
+  display: grid;
+  gap: 30px;
+}
+
+/* ===== Card ===== */
+.consult-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  border-left: 6px solid #2563eb;
+}
+
+.consult-card h2 {
+  margin-top: 0;
+  font-size: 28px;
+  color: #0f172a;
+}
+
+.consult-card ul {
+  padding-left: 20px;
+  margin: 15px 0;
+}
+
+.consult-card li {
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+
+.org {
+  font-size: 22px;
+  font-weight: bold;
+  color: #1e40af;
+}
+
+.contact {
+  background: #e0f2fe;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 22px;
+  margin: 15px 0;
+}
+
+.links a {
+  display: inline-block;
+  margin-right: 15px;
+  margin-top: 10px;
+  color: #2563eb;
+  font-size: 20px;
+  text-decoration: none;
+}
+
+.links a:hover {
+  text-decoration: underline;
+}
+
+.time,
+.address,
+.travel {
+  font-size: 21px;
+  margin-top: 10px;
+  color: #444;
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 768px) {
+  .header h1 {
+    font-size: 32px;
+  }
+
+  .header p {
+    font-size: 20px;
+  }
+
+  .consult-card h2 {
+    font-size: 24px;
+  }
+
+  .consult-card li,
+  .contact,
+  .time,
+  .address,
+  .travel {
+    font-size: 20px;
+  }
+}

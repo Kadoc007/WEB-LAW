@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายละเอียด</title>
+
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/card-detail.css">
+    <link rel="stylesheet" href="css/line-button.css">
+</head>
+
+<body>
+
+    <!-- ===== Navbar ===== -->
+    <div id="navbar"></div>
+
+    <!-- ===== Main Content ===== -->
+    <main class="page-content">
+
+        <div class="container">
+
+            <!-- Hero Section -->
+            <div id="card-hero" class="card-hero">
+                <img id="card-image" class="card-hero-image" src="" alt="">
+                <div class="card-hero-overlay">
+                    <h1 id="card-title">กำลังโหลด...</h1>
+                    <p id="card-subtitle" class="card-subtitle"></p>
+                    <span id="card-category-badge" class="category-badge"></span>
+                </div>
+            </div>
+
+            <!-- Content Section -->
+            <div class="card-body">
+
+                <!-- Description -->
+                <div id="card-description" class="card-description"></div>
+
+                <!-- Page Content (HTML) -->
+                <div id="card-content" class="card-content"></div>
+
+            </div>
+
+            <!-- Back Button -->
+            <div class="back-section">
+                <a href="home.html" class="back-btn">← กลับหน้าแรก</a>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- ===== LINE Contact Floating Button ===== -->
+    <a href="https://line.me/R/ti/p/@640smsos" class="line-float" target="_blank" title="มีคำถาม แอดเลย">
+        <img src="https://i.pinimg.com/736x/b2/22/db/b222dbc287cbf2b0100bddb6e5991a08.jpg" alt="Add LINE">
+        <span>มีคำถาม<br>แอดเลย</span>
+    </a>
+    <script>
+        const lineBtn = document.querySelector(".line-float");
+        if (lineBtn) {
+            setInterval(() => {
+                lineBtn.classList.add("wiggle");
+                setTimeout(() => {
+                    lineBtn.classList.remove("wiggle");
+                }, 900);
+            }, 5000);
+        }
+    </script>
+
+    <!-- โหลด Navbar -->
+    <script>
+        fetch("components/navbar.html")
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById("navbar").innerHTML = html;
+            });
+    </script>
+
+    <script src="js/card-detail.js"></script>
+
+</body>
+
+</html>

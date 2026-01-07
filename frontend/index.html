@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <title>กฎหมาย</title>
+
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/line-button.css">
+
+</head>
+
+<body>
+
+  <div id="navbar"></div>
+  <main class="page-content">
+    <div class="container">
+      <h1 id="law-title"></h1>
+      <p class="subtitle">ฉบับสรุปเพื่อการศึกษา</p>
+      <div id="law-list"></div>
+    </div>
+  </main>
+
+  </section>
+  <!-- ===== LINE Contact Floating Button ===== -->
+  <a href="https://line.me/R/ti/p/@640smsos" class="line-float" target="_blank" title="มีคำถาม แอดเลย">
+    <img src="https://i.pinimg.com/736x/b2/22/db/b222dbc287cbf2b0100bddb6e5991a08.jpg" alt="Add LINE">
+    <span>มีคำถาม<br>แอดเลย</span>
+  </a>
+  <script>
+    const lineBtn = document.querySelector(".line-float");
+    if (lineBtn) {
+      setInterval(() => {
+        lineBtn.classList.add("wiggle");
+        // เอา class ออกหลัง animation จบ
+        setTimeout(() => {
+          lineBtn.classList.remove("wiggle");
+        }, 900);
+      }, 5000); // ทุก 5 วินาที
+    }
+  </script>
+
+  <script>
+    fetch("components/navbar.html")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("navbar").innerHTML = html;
+      });
+  </script>
+
+  <script src="js/viewer.js"></script>
+</body>
+
+</html>

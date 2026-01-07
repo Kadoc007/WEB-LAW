@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <title>คลังกฎหมาย IT</title>
+
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/line-button.css">
+</head>
+
+<body>
+
+  <!-- ===== Navbar (component) ===== -->
+  <div id="navbar"></div>
+
+  <!-- 🔥 ครอบเนื้อหาทั้งหมด -->
+  <main class="page-content">
+
+    <!-- ===== Hero ===== -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1>ศูนย์รวมกฎหมายด้านเทคโนโลยีสารสนเทศ</h1>
+        <p>
+          แหล่งข้อมูลกฎหมาย IT ฉบับสรุป เข้าใจง่าย
+          เพื่อการศึกษาและการใช้งานเบื้องต้น
+        </p>
+      </div>
+    </section>
+    <!-- ===== Banner Slider ===== -->
+    <section class="banner-slider">
+      <div class="banner-track">
+
+        <a class="banner active" href="card-detail.html?slug=consult">
+          <img src="https://i.pinimg.com/736x/51/2b/69/512b699757a94212e26490d848d213bd.jpg">
+          <div class="banner-text">
+            <h3>ศูนย์รับปรึกษากฎหมาย</h3>
+            <p> แหล่งรวมหน่วยงานให้คำปรึกษาและช่วยเหลือทางกฎหมายสำหรับประชาชนทั่วไป</p>
+          </div>
+        </a>
+
+        <a class="banner" href="article2.html">
+          <img src="https://i.pinimg.com/736x/73/1f/d8/731fd84ba0a2972af7e0b037e6d74c76.jpg">
+          <div class="banner-text">
+            <h3>PDPA คืออะไร?</h3>
+            <p>สรุปเข้าใจง่ายใน 5 นาที</p>
+          </div>
+        </a>
+
+        <a class="banner" href="article3.html">
+          <img src="https://i.pinimg.com/736x/73/1f/d8/731fd84ba0a2972af7e0b037e6d74c76.jpg">
+          <div class="banner-text">
+            <h3>ลิขสิทธิ์ออนไลน์</h3>
+            <p>แชร์แบบไหนไม่ผิด</p>
+          </div>
+        </a>
+
+      </div>
+
+      <!-- Controls -->
+      <button class="banner-btn prev">‹</button>
+      <button class="banner-btn next">›</button>
+    </section>
+
+
+    <!-- ===== Main Content ===== -->
+    <section class="main">
+      <div class="cards">
+
+        <div class="card" onclick="location.href='index.html?category=computer'">
+          <h3>กฎหมายคอมพิวเตอร์</h3>
+          <p>พระราชบัญญัติว่าด้วยการกระทำความผิดเกี่ยวกับคอมพิวเตอร์</p>
+        </div>
+
+        <div class="card" onclick="location.href='index.html?category=privacy'">
+          <h3>PDPA</h3>
+          <p>กฎหมายคุ้มครองข้อมูลส่วนบุคคล</p>
+        </div>
+
+        <div class="card" onclick="location.href='index.html?category=copyright'">
+          <h3>ลิขสิทธิ์</h3>
+          <p>กฎหมายทรัพย์สินทางปัญญา</p>
+        </div>
+
+      </div>
+    </section>
+    <!-- ===== Extra Content (Dynamic from Firebase) ===== -->
+    <section class="extra-content">
+      <h2 class="section-title">ศูนย์ช่วยเหลือ / ความรู้เพิ่มเติม</h2>
+
+      <div id="dynamic-cards" class="image-cards">
+        <!-- จะโหลดจาก Firebase -->
+        <div class="loading-cards">
+          <p>กำลังโหลด...</p>
+        </div>
+      </div>
+    </section>
+    <!-- ===== LINE Contact Floating Button ===== -->
+    <a href="https://line.me/R/ti/p/@640smsos" class="line-float" target="_blank" title="มีคำถาม แอดเลย">
+      <img src="https://i.pinimg.com/736x/b2/22/db/b222dbc287cbf2b0100bddb6e5991a08.jpg" alt="Add LINE">
+      <span>สามารถปรึกษา<br>เบื้องต้นกับ<br>Chatbotได้</span>
+    </a>
+    <script>
+      const lineBtn = document.querySelector(".line-float");
+      if (lineBtn) {
+        setInterval(() => {
+          lineBtn.classList.add("wiggle");
+          // เอา class ออกหลัง animation จบ
+          setTimeout(() => {
+            lineBtn.classList.remove("wiggle");
+          }, 900);
+        }, 5000); // ทุก 5 วินาที
+      }
+    </script>
+
+  </main>
+
+  <!-- โหลด Navbar -->
+  <script>
+    fetch("components/navbar.html")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("navbar").innerHTML = html;
+      });
+  </script>
+
+  <script>
+    const banners = document.querySelectorAll(".banner");
+    const prevBtn = document.querySelector(".banner-btn.prev");
+    const nextBtn = document.querySelector(".banner-btn.next");
+
+    let current = 0;
+
+    function showBanner(index) {
+      banners.forEach(b => b.classList.remove("active"));
+      banners[index].classList.add("active");
+    }
+
+    function nextBanner() {
+      current = (current + 1) % banners.length;
+      showBanner(current);
+    }
+
+    function prevBanner() {
+      current = (current - 1 + banners.length) % banners.length;
+      showBanner(current);
+    }
+
+    nextBtn.addEventListener("click", nextBanner);
+    prevBtn.addEventListener("click", prevBanner);
+
+    // Auto slide ทุก 6 วินาที
+    setInterval(nextBanner, 6000);
+  </script>
+
+  <!-- ===== โหลดการ์ดจาก Firebase ===== -->
+  <script>
+    const CARD_API_URL = "http://localhost:3000/api/cards";
+
+    async function loadDynamicCards() {
+      const container = document.getElementById("dynamic-cards");
+
+      try {
+        const res = await fetch(CARD_API_URL);
+        const cards = await res.json();
+
+        if (cards.length === 0) {
+          container.innerHTML = `
+          <div class="image-card" onclick="location.href='consult.html'">
+            <img src="https://i.pinimg.com/736x/51/2b/69/512b699757a94212e26490d848d213bd.jpg" alt="Cyber Law">
+            <div class="image-card-body">
+              <h3>ศูนย์รับปรึกษากฎหมาย</h3>
+              <p>แหล่งรวมหน่วยงานให้คำปรึกษาและช่วยเหลือทางกฎหมาย สำหรับประชาชนทั่วไป</p>
+            </div>
+          </div>
+        `;
+          return;
+        }
+
+        container.innerHTML = "";
+
+        cards.forEach(card => {
+          const imgSrc = card.imageUrl || "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=400";
+
+          // สร้าง URL สำหรับหน้ารายละเอียด
+          let detailUrl = `card-detail.html?id=${card.id}`;
+          if (card.slug) {
+            detailUrl = `card-detail.html?slug=${card.slug}`;
+          }
+
+          container.innerHTML += `
+          <div class="image-card" onclick="location.href='${detailUrl}'">
+            <img src="${imgSrc}" alt="${card.title}" onerror="this.src='https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=400'">
+            <div class="image-card-body">
+              <h3>${card.title}</h3>
+              <p>${card.subtitle || card.description || ""}</p>
+            </div>
+          </div>
+        `;
+        });
+
+      } catch (err) {
+        console.error("Error loading cards:", err);
+        // แสดง fallback cards ถ้าโหลดไม่ได้
+        container.innerHTML = `
+        <div class="image-card" onclick="location.href='consult.html'">
+          <img src="https://i.pinimg.com/736x/51/2b/69/512b699757a94212e26490d848d213bd.jpg" alt="Cyber Law">
+          <div class="image-card-body">
+            <h3>ศูนย์รับปรึกษากฎหมาย</h3>
+            <p>แหล่งรวมหน่วยงานให้คำปรึกษาและช่วยเหลือทางกฎหมาย</p>
+          </div>
+        </div>
+
+        <div class="image-card" onclick="location.href='article2.html'">
+          <img src="https://i.pinimg.com/736x/73/1f/d8/731fd84ba0a2972af7e0b037e6d74c76.jpg" alt="PDPA">
+          <div class="image-card-body">
+            <h3>PDPA คืออะไร?</h3>
+            <p>เข้าใจง่ายสำหรับผู้เริ่มต้น</p>
+          </div>
+        </div>
+
+        <div class="image-card" onclick="location.href='article3.html'">
+          <img src="https://i.pinimg.com/736x/73/1f/d8/731fd84ba0a2972af7e0b037e6d74c76.jpg" alt="Copyright">
+          <div class="image-card-body">
+            <h3>ลิขสิทธิ์บนโลกออนไลน์</h3>
+            <p>โพสต์ แชร์ โหลด แบบไหนผิด</p>
+          </div>
+        </div>
+      `;
+      }
+    }
+
+    // โหลดเมื่อหน้าพร้อม
+    document.addEventListener("DOMContentLoaded", loadDynamicCards);
+  </script>
+
+</body>
+
+</html>

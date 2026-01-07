@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+serviceAccountKey.json
+backend/serviceAccountKey.json
+
+# Config files with API keys (keep config.example.js for reference)
+frontend/js/config.js
+!frontend/js/config.example.js
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*

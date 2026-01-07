@@ -1,0 +1,373 @@
+/* ===== Global (อย่าไปยุ่ง navbar) ===== */
+body {
+  margin: 0;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  min-height: 100vh;
+}
+
+/* ===== Page Content ===== */
+.page-content {
+  padding-top: 64px; /* เท่าความสูง navbar */
+  font-family: "Segoe UI", sans-serif;
+  display: flex;
+  justify-content: center;
+}
+
+/* ===== Container ===== */
+.container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+/* ===== Title ===== */
+.container h1 {
+  text-align: center;
+  color: #fff;
+  margin-bottom: 25px;
+  font-size: 2.2rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== Card ===== */
+.card {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 25px 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+  backdrop-filter: blur(10px);
+}
+
+/* ===== Warning ===== */
+.warning {
+  color: #e53935;
+  font-size: 0.9em;
+  margin-bottom: 10px;
+}
+
+/* ===== Hint ===== */
+.hint {
+  color: #666;
+  font-size: 0.85em;
+  margin: 4px 0 0;
+}
+
+/* ===== Required ===== */
+.required {
+  color: #e53935;
+  font-weight: bold;
+}
+
+/* ===== Form ===== */
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 12px 14px;
+  margin-top: 8px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  border: 2px solid #e0e0e0;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+/* ===== Form Group ===== */
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #333;
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* ===== Form Actions ===== */
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+/* ===== Button (ทั่วไป) ===== */
+button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+
+/* ปุ่มหลัก */
+.primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+}
+
+/* ปุ่ม secondary */
+.secondary {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.secondary:hover {
+  background: #d0d0d0;
+}
+
+/* ปุ่มลบ */
+.danger {
+  background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+}
+
+.danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
+}
+
+/* ===== Top Bar ===== */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.top-bar span {
+  font-weight: 600;
+  color: #333;
+}
+
+/* ===== Tabs ===== */
+.admin-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 25px;
+  background: #f5f5f5;
+  padding: 6px;
+  border-radius: 12px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 14px 20px;
+  background: transparent;
+  color: #666;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.tab-btn:hover {
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+}
+
+.tab-btn.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+/* ===== Tab Content ===== */
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Law List Item ===== */
+.law-item {
+  background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+  padding: 14px 18px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  border-left: 4px solid #667eea;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.25s ease;
+}
+
+.law-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.15);
+}
+
+/* ข้อความกฎหมาย */
+.law-text {
+  font-size: 15px;
+  color: #333;
+}
+
+/* ===== ปุ่มด้านขวา (แก้ไข + ลบ) ===== */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+/* ปุ่มในรายการ */
+.action-buttons button {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  font-size: 16px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ปุ่มแก้ไข */
+.edit-btn {
+  background: linear-gradient(135deg, #ffd93d 0%, #ff9a3c 100%);
+  color: #333;
+  box-shadow: 0 4px 10px rgba(255, 217, 61, 0.3);
+}
+
+.edit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(255, 217, 61, 0.4);
+}
+
+/* ===== Cards List (Admin) ===== */
+.cards-list {
+  display: grid;
+  gap: 15px;
+}
+
+.card-item {
+  background: linear-gradient(135deg, #f8f9ff 0%, #eef4ff 100%);
+  padding: 18px;
+  border-radius: 14px;
+  border-left: 5px solid #764ba2;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: all 0.25s ease;
+}
+
+.card-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 6px 20px rgba(118, 75, 162, 0.15);
+}
+
+.card-item-image {
+  width: 80px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: #ddd;
+}
+
+.card-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-item-title {
+  font-weight: 700;
+  font-size: 16px;
+  color: #1a1a2e;
+  margin-bottom: 4px;
+}
+
+.card-item-subtitle {
+  font-size: 14px;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-item-category {
+  display: inline-block;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  margin-top: 6px;
+}
+
+/* ===== Image Preview ===== */
+.image-preview {
+  margin-top: 10px;
+}
+
+.image-preview img {
+  max-width: 200px;
+  max-height: 150px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 600px) {
+  .container {
+    margin: 20px auto;
+    padding: 0 15px;
+  }
+
+  .admin-tabs {
+    flex-direction: column;
+  }
+
+  .law-item,
+  .card-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .action-buttons {
+    align-self: flex-end;
+  }
+
+  .card-item-image {
+    width: 100%;
+    height: 120px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+}

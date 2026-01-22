@@ -30,8 +30,8 @@
     </section>
     <!-- ===== Banner Slider ===== -->
     <section class="banner-slider">
-      <div class="banner-track">
 
+      <div class="banner-track">
         <a class="banner active" href="card-detail.html?slug=consult">
           <img src="https://i.pinimg.com/736x/51/2b/69/512b699757a94212e26490d848d213bd.jpg">
           <div class="banner-text">
@@ -154,16 +154,20 @@
     setInterval(nextBanner, 6000);
   </script>
 
-  <!-- ===== โหลดการ์ดจาก Firebase ===== -->
-  <script>
-    const CARD_API_URL = "http://localhost:3000/api/cards";
+  <!-- ===== Firebase SDK ===== -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
 
+  <!-- ===== โหลดการ์ดจาก Firebase โดยตรง ===== -->
+  <script>
     async function loadDynamicCards() {
       const container = document.getElementById("dynamic-cards");
 
       try {
-        const res = await fetch(CARD_API_URL);
-        const cards = await res.json();
+        // เรียก Firebase Firestore โดยตรง
+        const snapshot = await db.collection("cards").orderBy("createdAt", "desc").get();
+        const cards = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
         if (cards.length === 0) {
           container.innerHTML = `

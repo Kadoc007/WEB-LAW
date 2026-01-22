@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000/api/laws";
+// viewer.js - ดูกฎหมายตามหมวด (Firebase Direct Access)
 
 // ดึง category จาก query string
 const params = new URLSearchParams(window.location.search);
@@ -22,8 +22,18 @@ document.getElementById("law-title").innerText =
 
 async function loadLaws() {
   try {
-    const res = await fetch(`${API_URL}/${category}`);
-    const laws = await res.json();
+    // เรียก Firebase Firestore โดยตรง
+    const snapshot = await db
+      .collection("law")
+      .doc(category)
+      .collection("items")
+      .orderBy("section")
+      .get();
+
+    const laws = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
 
     const container = document.getElementById("law-list");
     container.innerHTML = "";
@@ -45,8 +55,15 @@ async function loadLaws() {
 
       container.appendChild(div);
     });
+
+    if (laws.length === 0) {
+      container.innerHTML = "<p>ไม่มีข้อมูลกฎหมายในหมวดนี้</p>";
+    }
+
   } catch (err) {
-    console.error(err);
+    console.error("Error loading laws:", err);
+    document.getElementById("law-list").innerHTML =
+      "<p>เกิดข้อผิดพลาดในการโหลดข้อมูล</p>";
   }
 }
 

@@ -1,3 +1,12 @@
 node server.js ไว้รันserver
 cd backend
 npm start
+ถ้าคุณจะ clone โปรเจคนี้บนเครื่องอื่น หรือมีคนอื่นต้องการใช้งาน ให้:
+Copy 
+config.example.js
+ → config.js แล้วใส่ API Key จริง
+Copy 
+serviceAccountKey.example.json
+ → 
+serviceAccountKey.json
+ แล้วใส่ข้อมูลจริง

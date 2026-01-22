@@ -1,5 +1,5 @@
-const API_URL = "http://localhost:3000/api/laws";
-const CARD_API_URL = "http://localhost:3000/api/cards";
+// admin.js - Admin Panel (Firebase Direct Access)
+
 let token = "";
 let editId = null;
 let editCardId = null;
@@ -9,40 +9,28 @@ async function login() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  const res = await fetch(
-    `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${FIREBASE_CONFIG.apiKey}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email,
-        password,
-        returnSecureToken: true
-      })
-    }
-  );
+  try {
+    // ใช้ Firebase Auth SDK โดยตรง
+    const userCredential = await auth.signInWithEmailAndPassword(email, password);
+    token = await userCredential.user.getIdToken();
 
-  const data = await res.json();
+    document.getElementById("login-box").style.display = "none";
+    document.getElementById("admin-panel").style.display = "block";
 
-  if (!data.idToken) {
-    alert("Login ไม่สำเร็จ");
-    return;
+    togglePenalty();
+    loadAdminLaws();
+    loadAdminCards();
+  } catch (err) {
+    console.error("Login error:", err);
+    alert("Login ไม่สำเร็จ: " + err.message);
   }
-
-  token = data.idToken;
-
-  document.getElementById("login-box").style.display = "none";
-  document.getElementById("admin-panel").style.display = "block";
-
-  togglePenalty();
-  loadAdminLaws();
-  loadAdminCards();
 }
 
 /* ================= LOGOUT ================= */
 function logout() {
   if (!confirm("ต้องการออกจากระบบหรือไม่?")) return;
 
+  auth.signOut();
   token = "";
   editId = null;
   editCardId = null;
@@ -99,35 +87,64 @@ async function loadAdminLaws() {
 
   togglePenalty();
 
-  const res = await fetch(`${API_URL}/${category}`);
-  const laws = await res.json();
+  try {
+    // เรียก Firebase Firestore โดยตรง
+    const snapshot = await db
+      .collection("law")
+      .doc(category)
+      .collection("items")
+      .orderBy("section")
+      .get();
 
-  const div = document.getElementById("admin-laws");
-  div.innerHTML = "";
+    const laws = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
 
-  laws.forEach(law => {
-    div.innerHTML += `
-    <div class="law-item">
+    const div = document.getElementById("admin-laws");
+    div.innerHTML = "";
 
-      <div class="law-text">
-        <b>${law.section}</b> - ${law.title}
+    laws.forEach(law => {
+      div.innerHTML += `
+      <div class="law-item">
+
+        <div class="law-text">
+          <b>${law.section}</b> - ${law.title}
+        </div>
+
+        <div class="action-buttons">
+          <button class="edit-btn" onclick="editLaw(
+            '${law.id}',
+            '${escapeForOnClick(law.section)}',
+            '${escapeForOnClick(law.title)}',
+            '${escapeForOnClick(law.description)}',
+            '${escapeForOnClick(law.penalty || "")}'
+          )">✏️</button>
+
+          <button class="danger" onclick="deleteLaw('${law.id}')">🗑</button>
+        </div>
+
       </div>
+    `;
+    });
 
-      <div class="action-buttons">
-        <button class="edit-btn" onclick="editLaw(
-          '${law.id}',
-          '${law.section}',
-          '${law.title}',
-          \`${law.description}\`,
-          '${law.penalty || ""}'
-        )">✏️</button>
+    if (laws.length === 0) {
+      div.innerHTML = "<p style='text-align:center; color:#888;'>ยังไม่มีข้อมูลกฎหมาย</p>";
+    }
+  } catch (err) {
+    console.error("Error loading laws:", err);
+  }
+}
 
-        <button class="danger" onclick="deleteLaw('${law.id}')">🗑</button>
-      </div>
-
-    </div>
-  `;
-  });
+// Helper function to escape strings for onclick
+function escapeForOnClick(str) {
+  if (!str) return "";
+  return str
+    .replace(/\\/g, "\\\\")
+    .replace(/'/g, "\\'")
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, "\\n")
+    .replace(/\r/g, "\\r");
 }
 
 /* ================= ADD / EDIT LAW ================= */
@@ -150,22 +167,25 @@ async function saveLaw() {
     data.penalty = penalty.value;
   }
 
-  const method = editId ? "PUT" : "POST";
-  const url = editId
-    ? `${API_URL}/${category}/${editId}`
-    : `${API_URL}/${category}`;
+  try {
+    const collectionRef = db.collection("law").doc(category).collection("items");
 
-  await fetch(url, {
-    method,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + token
-    },
-    body: JSON.stringify(data)
-  });
+    if (editId) {
+      // แก้ไข
+      await collectionRef.doc(editId).update(data);
+      alert("แก้ไขข้อมูลสำเร็จ!");
+    } else {
+      // เพิ่มใหม่
+      await collectionRef.add(data);
+      alert("เพิ่มข้อมูลสำเร็จ!");
+    }
 
-  resetForm();
-  loadAdminLaws();
+    resetForm();
+    loadAdminLaws();
+  } catch (err) {
+    console.error("Error saving law:", err);
+    alert("เกิดข้อผิดพลาด: " + err.message);
+  }
 }
 
 /* ================= EDIT LAW ================= */
@@ -187,14 +207,14 @@ async function deleteLaw(id) {
 
   const category = document.getElementById("category").value;
 
-  await fetch(`${API_URL}/${category}/${id}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: "Bearer " + token
-    }
-  });
-
-  loadAdminLaws();
+  try {
+    await db.collection("law").doc(category).collection("items").doc(id).delete();
+    alert("ลบข้อมูลสำเร็จ!");
+    loadAdminLaws();
+  } catch (err) {
+    console.error("Error deleting law:", err);
+    alert("เกิดข้อผิดพลาด: " + err.message);
+  }
 }
 
 /* ================= RESET LAW FORM ================= */
@@ -216,8 +236,9 @@ function resetForm() {
 /* ================= LOAD CARDS ================= */
 async function loadAdminCards() {
   try {
-    const res = await fetch(CARD_API_URL);
-    const cards = await res.json();
+    // เรียก Firebase Firestore โดยตรง
+    const snapshot = await db.collection("cards").orderBy("createdAt", "desc").get();
+    const cards = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
     const container = document.getElementById("admin-cards");
     container.innerHTML = "";
@@ -281,31 +302,26 @@ async function saveCard() {
     imageUrl: document.getElementById("card-imageUrl").value.trim(),
     slug: document.getElementById("card-slug").value.trim(),
     category: document.getElementById("card-category").value,
-    pageContent: document.getElementById("card-pageContent").value
+    pageContent: document.getElementById("card-pageContent").value,
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
   };
 
   try {
-    const method = editCardId ? "PUT" : "POST";
-    const url = editCardId ? `${CARD_API_URL}/${editCardId}` : CARD_API_URL;
-
-    const res = await fetch(url, {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token
-      },
-      body: JSON.stringify(data)
-    });
-
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.message || "Error saving card");
+    if (editCardId) {
+      // แก้ไข
+      await db.collection("cards").doc(editCardId).update(data);
+      alert("แก้ไขการ์ดสำเร็จ!");
+    } else {
+      // เพิ่มใหม่
+      data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      await db.collection("cards").add(data);
+      alert("เพิ่มการ์ดสำเร็จ!");
     }
 
-    alert(editCardId ? "แก้ไขการ์ดสำเร็จ!" : "เพิ่มการ์ดสำเร็จ!");
     resetCardForm();
     loadAdminCards();
   } catch (err) {
+    console.error("Error saving card:", err);
     alert("เกิดข้อผิดพลาด: " + err.message);
   }
 }
@@ -313,10 +329,10 @@ async function saveCard() {
 /* ================= EDIT CARD ================= */
 async function editCard(id) {
   try {
-    const res = await fetch(`${CARD_API_URL}/${id}`);
-    if (!res.ok) throw new Error("ไม่พบการ์ด");
+    const doc = await db.collection("cards").doc(id).get();
+    if (!doc.exists) throw new Error("ไม่พบการ์ด");
 
-    const card = await res.json();
+    const card = doc.data();
 
     editCardId = id;
     document.getElementById("card-title").value = card.title || "";
@@ -346,18 +362,11 @@ async function deleteCard(id) {
   if (!confirm("ยืนยันการลบการ์ดนี้?")) return;
 
   try {
-    const res = await fetch(`${CARD_API_URL}/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: "Bearer " + token
-      }
-    });
-
-    if (!res.ok) throw new Error("ลบไม่สำเร็จ");
-
+    await db.collection("cards").doc(id).delete();
     alert("ลบการ์ดสำเร็จ!");
     loadAdminCards();
   } catch (err) {
+    console.error("Error deleting card:", err);
     alert("เกิดข้อผิดพลาด: " + err.message);
   }
 }

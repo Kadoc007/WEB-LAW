@@ -1,4 +1,4 @@
-const CARD_API_URL = "http://localhost:3000/api/cards";
+// card-detail.js - แสดงรายละเอียดการ์ด (Firebase Direct Access)
 
 // Category labels mapping
 const categoryLabels = {
@@ -29,14 +29,16 @@ async function loadCardDetail() {
         let card = null;
 
         if (id) {
-            const res = await fetch(`${CARD_API_URL}/${id}`);
-            if (!res.ok) throw new Error("Not found");
-            card = await res.json();
+            // ดึงการ์ดตาม ID
+            const doc = await db.collection("cards").doc(id).get();
+            if (!doc.exists) throw new Error("Not found");
+            card = { id: doc.id, ...doc.data() };
         } else if (slug) {
-            const res = await fetch(CARD_API_URL);
-            const cards = await res.json();
-            card = cards.find(c => c.slug === slug);
-            if (!card) throw new Error("Not found");
+            // ดึงการ์ดตาม slug
+            const snapshot = await db.collection("cards").where("slug", "==", slug).get();
+            if (snapshot.empty) throw new Error("Not found");
+            const doc = snapshot.docs[0];
+            card = { id: doc.id, ...doc.data() };
         }
 
         displayCard(card);
